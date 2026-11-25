@@ -1,0 +1,5 @@
+<%- include("partials/header", { title, brand, currentUser, flash, csrfToken }) %>
+<section class="narrow-section">
+  <div class="form-card error-card"><p class="eyebrow">BookMyEvent</p><h1><%= title %></h1><p><%= message %></p><a class="button button-primary" href="/">Return home</a></div>
+</section>
+<%- include("partials/footer") %>

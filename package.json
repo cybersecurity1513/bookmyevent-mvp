@@ -1,0 +1,26 @@
+{
+  "name": "bookmyevent",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Secure local MVP for discovering and managing event vendors",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node --watch src/server.js",
+    "test": "node --test"
+  },
+  "engines": {
+    "node": ">=22.5"
+  },
+  "dependencies": {
+    "dotenv": "^16.5.0",
+    "ejs": "^3.1.10",
+    "express": "^5.1.0",
+    "express-rate-limit": "^7.5.0",
+    "express-session": "^1.18.1",
+    "helmet": "^8.1.0"
+  },
+  "devDependencies": {
+    "supertest": "^7.1.1"
+  }
+}

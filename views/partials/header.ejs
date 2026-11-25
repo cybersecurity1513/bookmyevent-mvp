@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#142d50">
+  <title><%= title %> | <%= brand %></title>
+  <link rel="stylesheet" href="/site.css">
+</head>
+<body>
+  <div class="topline">Plan your celebration with trusted local professionals.</div>
+  <header class="site-header">
+    <a class="brand" href="/">BookMy<span>Event</span></a>
+    <nav aria-label="Main navigation">
+      <a href="/#vendors">Explore vendors</a>
+      <% if (currentUser) { %>
+        <a href="/dashboard">Dashboard</a>
+        <form class="nav-form" method="post" action="/logout">
+          <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+          <button class="nav-button" type="submit">Sign out</button>
+        </form>
+      <% } else { %>
+        <a href="/login">Sign in</a>
+        <a class="nav-cta" href="/register">List your business</a>
+      <% } %>
+    </nav>
+  </header>
+  <main class="page">
+    <% if (flash) { %>
+      <div class="notice <%= flash.type === 'error' ? 'notice-error' : 'notice-success' %>" role="status"><%= flash.message %></div>
+    <% } %>

@@ -1,0 +1,28 @@
+<%- include("partials/header", { title, brand, currentUser, flash, csrfToken }) %>
+<section class="section dashboard">
+  <p class="eyebrow">Vendor workspace</p><h1>Your business dashboard</h1>
+  <p>Your listing status: <span class="status status-<%= vendor.status %>"><%= vendor.status %></span></p>
+  <% if (vendor.status === "pending") { %><p class="notice">Your listing is visible only to you until an administrator approves it.</p><% } %>
+  <% if (vendor.status === "rejected") { %><p class="notice notice-error">Your listing is not public. Contact the marketplace administrator for assistance.</p><% } %>
+  <div class="form-card profile-card">
+    <h2>Edit your profile</h2>
+    <form method="post" action="/vendor/profile" class="stack-form">
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+      <label>Business name<input name="name" required minlength="2" maxlength="100" value="<%= vendor.name %>"></label>
+      <label>Category<select name="category" required><% categories.forEach((item) => { %><option value="<%= item %>" <%= vendor.category === item ? "selected" : "" %>><%= item %></option><% }) %></select></label>
+      <label>Contact person<input name="contact" required minlength="2" maxlength="100" value="<%= vendor.contact %>"></label>
+      <label>Business phone<input name="phone" required minlength="8" maxlength="20" pattern="[0-9+() -]{8,20}" value="<%= vendor.phone %>"></label>
+      <label>City<input name="city" required minlength="2" maxlength="80" value="<%= vendor.city %>"></label>
+      <label>Starting price (₹)<input name="price" type="number" min="0" max="100000000" required value="<%= vendor.price %>"></label>
+      <label class="full-width">Description<textarea name="description" required minlength="10" maxlength="1000" rows="4"><%= vendor.description %></textarea></label>
+      <button class="button button-primary full-width" type="submit">Save changes</button>
+    </form>
+  </div>
+  <h2 class="section-gap">Enquiries for your business</h2>
+  <% if (bookings.length) { %>
+    <div class="table-wrap"><table><thead><tr><th>Customer</th><th>Event date</th><th>Phone</th><th>City / event</th><th>Budget</th><th>Requirements</th><th>Status</th></tr></thead><tbody>
+      <% bookings.forEach((booking) => { %><tr><td><%= booking.customer %></td><td><%= booking.event_date %></td><td><%= booking.phone %></td><td><%= booking.city %><small><%= booking.event_type %></small></td><td>₹<%= Number(booking.budget).toLocaleString("en-IN") %></td><td><%= booking.requirements || "—" %></td><td><span class="status"><%= booking.status %></span></td></tr><% }) %>
+    </tbody></table></div>
+  <% } else { %><p class="empty-state">You have no enquiries yet.</p><% } %>
+</section>
+<%- include("partials/footer") %>

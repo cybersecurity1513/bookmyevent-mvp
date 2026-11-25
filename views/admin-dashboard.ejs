@@ -1,0 +1,37 @@
+<%- include("partials/header", { title, brand, currentUser, flash, csrfToken }) %>
+<section class="section dashboard">
+  <p class="eyebrow">Administrator</p><h1>Marketplace dashboard</h1>
+  <div class="stats">
+    <div><span>Vendors</span><strong><%= vendors.length %></strong></div>
+    <div><span>Pending approval</span><strong><%= vendors.filter(v => v.status === "pending").length %></strong></div>
+    <div><span>Enquiries</span><strong><%= bookings.length %></strong></div>
+  </div>
+  <h2>Vendor applications</h2>
+  <% if (vendors.length) { %>
+    <div class="table-wrap"><table><thead><tr><th>Business</th><th>Contact</th><th>Location</th><th>Price</th><th>Status</th><th>Review</th></tr></thead><tbody>
+      <% vendors.forEach((vendor) => { %><tr>
+        <td><strong><%= vendor.name %></strong><small><%= vendor.category %></small></td>
+        <td><%= vendor.contact %><small><%= vendor.phone %></small></td>
+        <td><%= vendor.city %></td><td>₹<%= Number(vendor.price).toLocaleString("en-IN") %></td>
+        <td><span class="status status-<%= vendor.status %>"><%= vendor.status %></span></td>
+        <td><div class="action-row">
+          <% if (vendor.status !== "approved") { %><form method="post" action="/admin/vendors/<%= vendor.id %>/status"><input type="hidden" name="_csrf" value="<%= csrfToken %>"><input type="hidden" name="status" value="approved"><button class="button button-small button-primary" type="submit">Approve</button></form><% } %>
+          <% if (vendor.status !== "rejected") { %><form method="post" action="/admin/vendors/<%= vendor.id %>/status"><input type="hidden" name="_csrf" value="<%= csrfToken %>"><input type="hidden" name="status" value="rejected"><button class="button button-small button-outline" type="submit">Reject</button></form><% } %>
+        </div></td>
+      </tr><% }) %>
+    </tbody></table></div>
+  <% } else { %><p class="empty-state">No vendor applications yet.</p><% } %>
+
+  <h2 class="section-gap">Customer enquiries</h2>
+  <% if (bookings.length) { %>
+    <div class="table-wrap"><table><thead><tr><th>Customer</th><th>Vendor</th><th>Event date</th><th>Phone</th><th>City / event</th><th>Requirements</th><th>Status</th><th>Action</th></tr></thead><tbody>
+      <% bookings.forEach((booking) => { %><tr>
+        <td><strong><%= booking.customer %></strong></td><td><%= booking.vendor_name %></td><td><%= booking.event_date %></td>
+        <td><%= booking.phone %></td><td><%= booking.city %><small><%= booking.event_type %></small></td><td><%= booking.requirements || "—" %></td>
+        <td><span class="status"><%= booking.status %></span></td>
+        <td><% if (booking.status === "New") { %><form method="post" action="/admin/bookings/<%= booking.id %>/status"><input type="hidden" name="_csrf" value="<%= csrfToken %>"><input type="hidden" name="status" value="Contacted"><button class="button button-small button-outline" type="submit">Mark contacted</button></form><% } %></td>
+      </tr><% }) %>
+    </tbody></table></div>
+  <% } else { %><p class="empty-state">No enquiries yet.</p><% } %>
+</section>
+<%- include("partials/footer") %>

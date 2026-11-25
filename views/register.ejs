@@ -1,0 +1,29 @@
+<%- include("partials/header", { title, brand, currentUser, flash, csrfToken }) %>
+<section class="narrow-section">
+  <div class="form-card">
+    <p class="eyebrow">Join the marketplace</p>
+    <h1>Register your business</h1>
+    <p class="muted">Your listing will stay private until an administrator approves it.</p>
+    <% if (error) { %><div class="notice notice-error" role="alert"><%= error %></div><% } %>
+    <form method="post" action="/register" class="stack-form">
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+      <label>Business / vendor name<input name="name" required minlength="2" maxlength="100" value="<%= values?.name || '' %>"></label>
+      <label>Category
+        <select name="category" required>
+          <option value="">Select a category</option>
+          <% categories.forEach((item) => { %><option value="<%= item %>" <%= values?.category === item ? "selected" : "" %>><%= item %></option><% }) %>
+        </select>
+      </label>
+      <label>Contact person<input name="contact" required minlength="2" maxlength="100" autocomplete="name" value="<%= values?.contact || '' %>"></label>
+      <label>Business phone<input name="phone" required minlength="8" maxlength="20" inputmode="tel" autocomplete="tel" pattern="[0-9+() -]{8,20}" value="<%= values?.phone || '' %>"></label>
+      <label>City<input name="city" required minlength="2" maxlength="80" value="<%= values?.city || 'Meerut' %>"></label>
+      <label>Starting price (₹)<input name="price" type="number" min="0" max="100000000" required value="<%= values?.price ?? '' %>"></label>
+      <label>Business email<input name="email" type="email" required maxlength="254" autocomplete="email" value="<%= values?.email || '' %>"></label>
+      <label>Password (12–128 characters)<input name="password" type="password" required minlength="12" maxlength="128" autocomplete="new-password"></label>
+      <label class="full-width">Short description<textarea name="description" required minlength="10" maxlength="1000" rows="4"><%= values?.description || '' %></textarea></label>
+      <p class="privacy-note full-width">Your business contact information is stored on the server and shown publicly only after approval. Use a unique password.</p>
+      <button class="button button-primary full-width" type="submit">Create account and submit for approval</button>
+    </form>
+  </div>
+</section>
+<%- include("partials/footer") %>
